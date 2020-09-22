@@ -25,6 +25,13 @@ class Curl extends AbstractCurl {
     $profile               = $this->getProfile();
 
     $request               = $this->getAPI3Params($call);
+    if ($call->getAction() == "volunteer_application") {
+      foreach ($request as $key => $value) {
+    	if (is_array($value) && empty($value[0])) {
+    	  unset($request[$key]);
+	}
+      }
+    }
     // $request['api_key']    = $profile['api_key'];
     // $request['key']        = $profile['site_key'];
     // $request['version']    = 3;
@@ -33,7 +40,7 @@ class Curl extends AbstractCurl {
     $post_data = "entity=" . $call->getEntity();
     $post_data .= "&action=" . $call->getAction();
     $post_data .= "&api_key={$profile['api_key']}&key={$profile['site_key']}&version=3&XDEBUG_SESSION_START=sdf";
-    $post_data .= "&json=" . urlencode(json_encode($request));
+    $post_data .= "&json=" . stripslashes(json_encode($request));
 
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_POST,           1);
