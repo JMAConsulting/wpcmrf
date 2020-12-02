@@ -64,6 +64,20 @@ class Curl extends AbstractCurl {
         }
       }
     }
+    if ($call->getAction() == 'contact_information') {
+            $yesno = [
+                    'age_18_',
+                    'driving_license',
+      ];
+            foreach ($request as $key => $value) {
+                    if (is_array($value) && empty($value[0])) {
+                            unset($request[$key]);
+                    }
+                    if (in_array($key, $yesno) && empty($value)) {
+                            $request[$key] = "0";
+                    }
+      }
+    }
     // $request['api_key']    = $profile['api_key'];
     // $request['key']        = $profile['site_key'];
     // $request['version']    = 3;
